@@ -1,0 +1,43 @@
+import numpy as np
+
+# Define the parameters for the homework problem
+beta = 0.9  # Discount factor
+cost = 5  # Cycle cost
+states = list(range(11))  # States including the stopping states 0 and 10
+stopping_states = {0, 10}
+
+# Initialize the value function for all states, with stopping states set to 0
+value_function = np.zeros(len(states))
+
+# Define the transition probabilities for p = 0.2 and p = 0.6, and compute value function for both
+probabilities = [0.2, 0.6]
+
+# Function to update the value function for one iteration
+def update_value_function(v, p, beta, cost, stopping_states):
+    new_v = np.copy(v)
+    for state in range(1, len(v) - 1):  # Exclude stopping states
+        if state in stopping_states:
+            continue
+        # Calculate the expected value for each action and take the max
+        new_v[state] = max(
+            cost,  # The cost to stop at this state
+            beta * (p * v[state + 1] + (1 - p) * v[state - 1])  # Expected value if continue
+        )
+    return new_v
+
+# Function to perform the value iteration until convergence
+def value_iteration(p, beta, cost, stopping_states, threshold=1e-8):
+    v = np.zeros(len(states))
+    while True:
+        new_v = update_value_function(v, p, beta, cost, stopping_states)
+        if np.max(np.abs(new_v - v)) < threshold:
+            break
+        v = new_v
+    return v
+
+# Compute the value function for both probabilities
+value_functions = {}
+for p in probabilities:
+    value_functions[p] = value_iteration(p, beta, cost, stopping_states)
+
+value_functions
