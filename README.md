@@ -32,7 +32,7 @@ Approx. **15 minutes** (depends on hardware and video length).
 3. Run:
 ```bash
 python main.py
-
+```
 
 ## Model Design
 
